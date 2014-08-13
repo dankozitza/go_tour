@@ -6,8 +6,8 @@ import (
 
 func Sqrt(x float64) float64 {
    var z float64 = 1
-   var last float64 = 0
-   var loops int = 1
+   var last float64 = 2
+   var cnt int64 = 0
    for {
       var diff float64 = last - z
       if diff < 0 {
@@ -16,21 +16,17 @@ func Sqrt(x float64) float64 {
 
       if diff > .01 {
          last = z
-         z = z - (((x * x) - x) / (2 * x))
-         loops = loops + 1
-         fmt.Println(z)
+         z = z - (((z * z) - x) / (2 * z))
+         cnt = cnt + 1
+         fmt.Println("cnt: [", cnt, "] number: [", z, "] diff: [", diff, "]")
       } else {
          break
       }
    }
 
-   fmt.Println("loops: ")
-   fmt.Println(loops)
-
    return z
 }
 
 func main() {
-    fmt.Println(Sqrt(4))
-    fmt.Println("\n")
+    fmt.Println("approximation: ", Sqrt(4))
 }
