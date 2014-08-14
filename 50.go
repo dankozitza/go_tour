@@ -2,7 +2,7 @@ package main
 
 import (
     "fmt"
-	 "math/cmplx"
+    "math/cmplx"
 )
 
 func Cbrt(x complex128) complex128 {
@@ -16,11 +16,11 @@ func Cbrt(x complex128) complex128 {
       cnt += 1
       
       var diff complex128 = last - z
-		fmt.Println("cnt: [", cnt, "] number: [", z, "] diff: [", diff, "]")
+      fmt.Println("cnt: [", cnt, "] number: [", z, "] diff: [", diff, "]")
 
       if cmplx.Abs(diff) < .01 {
-			break
-		}
+         break
+      }
    }
 
    return z
