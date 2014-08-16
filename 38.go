@@ -15,7 +15,7 @@ func Pic(dx, dy int) [][]uint8 {
       graph[y] = make([]uint8, dx)
       //fmt.Println(, "\n")
       for x := range graph[y] {
-         graph[y][x] = uint8(x) * uint8(y)
+         graph[y][x] = uint8(x * y)
       }
    }
 
