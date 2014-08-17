@@ -1,13 +1,22 @@
 package main
 
 import (
-    "code.google.com/p/go-tour/wc"
+   "code.google.com/p/go-tour/wc"
+   "strings"
 )
 
 func WordCount(s string) map[string]int {
-    return map[string]int{"x": 1}
+
+   m := make(map[string]int)
+   words := strings.Fields(s)
+
+   for _, v := range words {
+      m[v] += 1
+   }
+
+   return m
 }
 
 func main() {
-    wc.Test(WordCount)
+   wc.Test(WordCount)
 }
