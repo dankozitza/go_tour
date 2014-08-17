@@ -2,6 +2,7 @@ package main
 
 import (
    "fmt"
+   "strconv"
 )
 
 func Sqrt(x float64) (float64, error) {
@@ -10,8 +11,7 @@ func Sqrt(x float64) (float64, error) {
    var cnt int64 = 0
 
    if (x < 0) {
-      var err ErrNegativeSqrt
-      return x, err
+      return 0, ErrNegativeSqrt(x)
    }
 
    for {
@@ -41,5 +41,7 @@ func main() {
 type ErrNegativeSqrt float64
 
 func (e ErrNegativeSqrt) Error() string {
-   return "Error: cannot get square root of negative number!"
+
+   // there must be a better way to do this
+   return "cannot Sqrt negative number: " + strconv.Itoa(int(float64(e)))
 }
