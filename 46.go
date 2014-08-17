@@ -5,11 +5,18 @@ import "fmt"
 // fibonacci is a function that returns
 // a function that returns an int.
 func fibonacci() func() int {
-   fib := 1
-   var last int
+   var fib int
+   last1 := 1
+   last2 := 0 
+   first := true
    return func() int {
-      fib += last
-      last = fib
+      if (first) {
+         first = false
+         return 1
+      }
+      fib = last1 + last2
+      last2 = last1
+      last1 = fib
       return fib
    }
 }
