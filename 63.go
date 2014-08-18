@@ -6,9 +6,7 @@ import (
    "image/color"
 )
 
-type Image struct{
-   graph [][]color.RGBA
-}
+type Image struct{}
 
 func (i Image) ColorModel() color.Model {
    return color.RGBAModel
