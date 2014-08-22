@@ -1,26 +1,67 @@
 package main
 
 import (
-   "code.google.com/p/go-tour/pic"
-   "image"
-   "image/color"
+   "io"
+   "os"
+   "strings"
+   "fmt"
 )
 
-type Image struct{}
-
-func (i Image) ColorModel() color.Model {
-   return color.RGBAModel
+type rot13Reader struct {
+   r io.Reader
+   letters []byte
 }
 
-func (i Image) Bounds() image.Rectangle {
-   return image.Rect(0, 0, 255, 255)
-}
+func (r13 *rot13Reader) Read(p []byte) (n int, e error) {
 
-func (i Image) At(x, y int) color.Color {
-   return color.RGBA{uint8(x), uint8(y), 255, 255}
+   if len(p) == 0 {
+      return 0, nil
+   }
+
+   n, e = r13.r.Read(p)
+
+   //fmt.Printf("p before work: [%b]", p)
+
+
+   l_map := make(map[byte]int, len(p)+1)
+
+   for i, l := range r13.letters {
+      fmt.Println("letter: [", string(l), "], index: [", i, "]")
+      l_map[l] = i
+   }
+
+   fmt.Printf("letters length: [%i]\n", len(r13.letters))
+
+   
+   for i, l := range p {
+      if (l_map[l] != 0) {
+
+         offset := (l_map[l] + 13)
+
+         if offset >= (len(r13.letters) - 1) {
+            offset -= len(r13.letters) - 1
+         }
+
+         fmt.Println("offset: [", offset, "], i: [", i, "], l: [", string(l), "]")
+
+         p[i] = r13.letters[offset]
+      }
+   }
+
+   //n, e = r13.r.Read(p)
+
+   //p[0] = 'a'
+
+//   for l, i := range r.buff {
+//      p[i] = l
+//   }
+   return
 }
 
 func main() {
-    m := Image{}
-    pic.ShowImage(m)
+   s := strings.NewReader(
+      "Lbh penxrq gur pbqr!")
+   r := rot13Reader{s, []byte{'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'}}
+
+   io.Copy(os.Stdout, &r)
 }
