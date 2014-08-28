@@ -45,3 +45,4 @@ func (e ErrNegativeSqrt) Error() string {
 	// there must be a better way to do this
 	return "cannot Sqrt negative number: " + strconv.Itoa(int(float64(e)))
 }
+
