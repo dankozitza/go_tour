@@ -1,7 +1,7 @@
 package main
 
 import (
-//	"fmt"
+	//	"fmt"
 	"io"
 	"os"
 	"strings"
@@ -12,6 +12,12 @@ type rot13Reader struct {
 	letters []byte
 }
 
+type rotReader struct {
+	r       io.Reader
+	letters []byte
+	rotby   int
+}
+
 func (r13 *rot13Reader) Read(p []byte) (n int, e error) {
 
 	if len(p) == 0 {
@@ -20,8 +26,6 @@ func (r13 *rot13Reader) Read(p []byte) (n int, e error) {
 
 	n, e = r13.r.Read(p)
 
-	//fmt.Printf("p before work: [%b]", p)
-
 	l_map := make(map[byte]int, len(p)+1)
 
 	for i, l := range r13.letters {
@@ -29,17 +33,14 @@ func (r13 *rot13Reader) Read(p []byte) (n int, e error) {
 		l_map[l] = i
 	}
 
-	//fmt.Printf("letters length: [%i]\n", len(r13.letters))
-
 	for i, l := range p {
-      offset, ok := l_map[l]
+		offset, ok := l_map[l]
 		if ok {
 
 			offset += 13
 
 			if offset >= len(r13.letters) {
 				offset -= len(r13.letters)
-            //fmt.Println("got here!")
 			}
 
 			//fmt.Println("position: [", l_map[l], "], offset: [", offset, "], i: [", i, "], l: [", string(l), "]")
@@ -48,23 +49,12 @@ func (r13 *rot13Reader) Read(p []byte) (n int, e error) {
 		}
 	}
 
-	//if len(p) > n {
-	//	fmt.Println("what")
-	//}
-
-	//n, e = r13.r.Read(p)
-
-	//p[0] = 'a'
-
-	//   for l, i := range r.buff {
-	//      p[i] = l
-	//   }
 	return
 }
 
 func main() {
 	s := strings.NewReader(
-		"lbh penxrq gur pbqr!")
+		"lbh penxrq gur pbqr!\n")
 	r := rot13Reader{s, []byte{'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'}}
 
 	io.Copy(os.Stdout, &r)
