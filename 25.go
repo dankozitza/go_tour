@@ -30,4 +30,3 @@ func Sqrt(x float64) float64 {
 func main() {
 	fmt.Println("approximation: ", Sqrt(4))
 }
-

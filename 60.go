@@ -26,4 +26,3 @@ func main() {
 	http.Handle("/struct", &Struct{"hello", ":", "Gophers!"})
 	http.ListenAndServe("localhost:4000", nil)
 }
-

@@ -24,4 +24,3 @@ func main() {
 	m := Image{}
 	pic.ShowImage(m)
 }
-
