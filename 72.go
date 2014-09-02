@@ -1,8 +1,8 @@
 package main
 
 import (
-	"fmt"
 	"code.google.com/p/go-tour/tree"
+	"fmt"
 )
 
 // Walk walks the tree t sending all values
@@ -33,8 +33,8 @@ func Same(t1, t2 *tree.Tree) bool {
 	close(c2)
 
 	for {
-		i1, ok1 := <- c1
-		i2, ok2 := <- c2
+		i1, ok1 := <-c1
+		i2, ok2 := <-c2
 
 		fmt.Println(i1, " ", ok1, " ", i2, " ", ok2)
 
