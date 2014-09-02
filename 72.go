@@ -10,25 +10,41 @@ import (
 func Walk(t *tree.Tree, ch chan int) {
 	if t.Left != nil {
 		Walk(t.Left, ch)
+		//return
 	}
+	fmt.Println(t.Value)
 	ch <- t.Value
 	if t.Right != nil {
 		Walk(t.Right, ch)
+		//return
 	}
+	//close(ch)
 }
 
 // Same determines whether the trees
 // t1 and t2 contain the same values.
 func Same(t1, t2 *tree.Tree) bool {
-	c1 := make(chan int)
-	c2 := make(chan int)
+	c1 := make(chan int, 10)
+	c2 := make(chan int, 10)
 
 	Walk(t1, c1)
 	Walk(t2, c2)
 
 	for {
-		fmt.Println(<-c1, " ", <-c2)
+		i1, ok1 := <- c1
+		i2, ok2 := <- c2
+
+		fmt.Println(i1, " ", ok1, " ", i2, " ", ok2)
+
+		if !ok1 && !ok2 {
+			break
+		}
+		if !ok1 || !ok2 {
+			fmt.Println("trees have different number of values")
+			return false
+		}
 	}
+	return false
 }
 
 func main() {
