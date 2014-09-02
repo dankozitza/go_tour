@@ -29,6 +29,8 @@ func Same(t1, t2 *tree.Tree) bool {
 
 	Walk(t1, c1)
 	Walk(t2, c2)
+	close(c1)
+	close(c2)
 
 	for {
 		i1, ok1 := <- c1
@@ -43,8 +45,12 @@ func Same(t1, t2 *tree.Tree) bool {
 			fmt.Println("trees have different number of values")
 			return false
 		}
+		if i1 != i2 {
+			fmt.Println("values do not match")
+			return false
+		}
 	}
-	return false
+	return true
 }
 
 func main() {
