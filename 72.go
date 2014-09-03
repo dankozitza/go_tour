@@ -10,15 +10,12 @@ import (
 func Walk(t *tree.Tree, ch chan int) {
 	if t.Left != nil {
 		Walk(t.Left, ch)
-		//return
 	}
 	fmt.Println(t.Value)
 	ch <- t.Value
 	if t.Right != nil {
 		Walk(t.Right, ch)
-		//return
 	}
-	//close(ch)
 }
 
 // Same determines whether the trees
