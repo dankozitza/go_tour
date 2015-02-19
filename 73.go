@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"net/http"
 )
 
 type Fetcher interface {
@@ -19,12 +20,12 @@ func Crawl(url string, depth int, fetcher Fetcher) {
 	if depth <= 0 {
 		return
 	}
-	body, urls, err := fetcher.Fetch(url)
+	_, urls, err := fetcher.Fetch(url)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
-	fmt.Printf("found: %s %q\n", url, body)
+	fmt.Printf("found: %s %q\n", url)//body)
 	for _, u := range urls {
 		Crawl(u, depth-1, fetcher)
 	}
@@ -35,51 +36,61 @@ func main() {
 	Crawl("http://golang.org/", 4, fetcher)
 }
 
-// fakeFetcher is Fetcher that returns canned results.
-type fakeFetcher map[string]*fakeResult
+type myFetcher struct {}
 
-type fakeResult struct {
-	body string
-	urls []string
+func get_urls(body string) []string {
+	var urls []string
+
+	//fmt.Println(body)
+
+	return urls
 }
 
-func (f fakeFetcher) Fetch(url string) (string, []string, error) {
-	if res, ok := f[url]; ok {
-		return res.body, res.urls, nil
+func (f myFetcher) Fetch(url string) (string, []string, error) {
+	res, err := http.Get(url)
+	b := make([]byte, res.ContentLength)
+	res.Body.Read(b)
+	//fmt.Println("got res: ", res)
+
+	if (err == nil) {
+		return string(b), get_urls(string(b)), nil
 	}
-	return "", nil, fmt.Errorf("not found: %s", url)
+
+	return "", nil, fmt.Errorf("fetching: %s returned: %s", url, err.Error())
 }
+
+var fetcher = myFetcher{}
 
 // fetcher is a populated fakeFetcher.
-var fetcher = fakeFetcher{
-	"http://golang.org/": &fakeResult{
-		"The Go Programming Language",
-		[]string{
-			"http://golang.org/pkg/",
-			"http://golang.org/cmd/",
-		},
-	},
-	"http://golang.org/pkg/": &fakeResult{
-		"Packages",
-		[]string{
-			"http://golang.org/",
-			"http://golang.org/cmd/",
-			"http://golang.org/pkg/fmt/",
-			"http://golang.org/pkg/os/",
-		},
-	},
-	"http://golang.org/pkg/fmt/": &fakeResult{
-		"Package fmt",
-		[]string{
-			"http://golang.org/",
-			"http://golang.org/pkg/",
-		},
-	},
-	"http://golang.org/pkg/os/": &fakeResult{
-		"Package os",
-		[]string{
-			"http://golang.org/",
-			"http://golang.org/pkg/",
-		},
-	},
-}
+//var fetcher = fakeFetcher{
+//	"http://golang.org/": &fakeResult{
+//		"The Go Programming Language",
+//		[]string{
+//			"http://golang.org/pkg/",
+//			"http://golang.org/cmd/",
+//		},
+//	},
+//	"http://golang.org/pkg/": &fakeResult{
+//		"Packages",
+//		[]string{
+//			"http://golang.org/",
+//			"http://golang.org/cmd/",
+//			"http://golang.org/pkg/fmt/",
+//			"http://golang.org/pkg/os/",
+//		},
+//	},
+//	"http://golang.org/pkg/fmt/": &fakeResult{
+//		"Package fmt",
+//		[]string{
+//			"http://golang.org/",
+//			"http://golang.org/pkg/",
+//		},
+//	},
+//	"http://golang.org/pkg/os/": &fakeResult{
+//		"Package os",
+//		[]string{
+//			"http://golang.org/",
+//			"http://golang.org/pkg/",
+//		},
+//	},
+//}
